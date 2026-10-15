@@ -12,4 +12,12 @@ jobs:
       - name: Prepare build directory
         run: mkdir -p bin
       - name: make check
-        run: make check
+        run: |
+          set -o pipefail
+          make check | tee /tmp/make-check.log
+          {
+            echo '## make check — passed'
+            echo '```text'
+            cat /tmp/make-check.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
